@@ -6,7 +6,7 @@
 This addon runs two scripted inputs to collect a inputs btool and a listing of all directories in SPLUNK_HOME/etc/apps. It works on both windows and linux.
 
 * Author: Cameron Just
-* Version: 1.1.0
+* Version: 1.1.1
 * Splunkbase URL: n/a
 * Source type(s): forwarder_config:inputs, forwarder_config:apps
 * Has index-time operations: Yes
@@ -79,3 +79,8 @@ index=main sourcetype="forwarder_config:inputs" conf_file_full=*
 | stats dc(host) values(host) first(full_settings) by app, stanza, md5sum
 ```
 
+## Changelog
+
+* 1.0.0 - Initial creation
+* 1.1.0 - Expanding monitoring to HFs
+* 1.1.1 - Added some dashboarding which can be seen by making app visible.
