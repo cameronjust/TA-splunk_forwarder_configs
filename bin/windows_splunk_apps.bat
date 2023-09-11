@@ -9,7 +9,7 @@ set "directory_hf=C:\Program Files\Splunk\bin\"
 if exist "%directory_uf%" (
 	dir /b /ad "C:\Program Files\SplunkUniversalForwarder\etc\apps"
 
-) elseif exist "%directory_hf%" (
+) else if exist "%directory_hf%" (
 	dir /b /ad "C:\Program Files\Splunk\etc\apps"
 	
 ) else (

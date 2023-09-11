@@ -8,7 +8,7 @@ set "directory_hf=C:\Program Files\Splunk\bin\"
 if exist "%directory_uf%" (
 	"C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe" btool inputs list --debug | findstr /V "etc\system\default"
 	
-) elseif exist "%directory_hf%" (
+) else if exist "%directory_hf%" (
 	"C:\Program Files\Splunk\bin\splunk.exe" btool inputs list --debug | findstr /V "etc\system\default"
 	
 ) else (
