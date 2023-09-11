@@ -1,3 +1,6 @@
+### IMPORTANT: This addon must also be on the indexers and/or aggregate HFs as it contains index time operations. If you forget the data will all come in as multiple lines instead of one line per event.
+
+
 # Since the order of the btool can get lost due to _time being the same for all events you can force Splunk to return the exact order the events arrived with this search
 
 
