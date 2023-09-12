@@ -52,11 +52,11 @@
       <initialValue>settings="disabled*=*0" OR settings="disabled*=*false"</initialValue>
     </input>
     <input type="dropdown" token="token_exclude_splunk_defaults">
-      <label>Exclude Splunk Defaults</label>
-      <choice value="(app!=&quot;splunk_assist&quot; AND app!=&quot;python_upgrade_readiness_app&quot; AND app!=&quot;splunk_instrumentation&quot; AND app!=&quot;splunk_secure_gateway&quot; AND app!=&quot;splunk_app_addon-builder&quot;)">Yes</choice>
-      <choice value="*">No</choice>
-      <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</default>
-      <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</initialValue>
+	  <label>Exclude Splunk Defaults</label>
+	  <choice value="(app!=&quot;splunk_assist&quot; AND app!=&quot;python_upgrade_readiness_app&quot; AND app!=&quot;splunk_instrumentation&quot; AND app!=&quot;splunk_secure_gateway&quot; AND app!=&quot;splunk_app_addon-builder&quot; AND app!=&quot;SplunkUniversalForwarder&quot;)">Yes</choice>
+	  <choice value="*">No</choice>
+	  <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder" AND app!="SplunkUniversalForwarder")</default>
+	  <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder" AND app!="SplunkUniversalForwarder")</initialValue>
     </input>
   </fieldset>
   <row>
