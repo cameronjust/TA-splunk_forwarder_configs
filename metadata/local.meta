@@ -1,7 +1,32 @@
 [app/ui]
 version = 9.0.5
-modtime = 1694475168.737254000
+modtime = 1694475720.617166000
 
 [app/launcher]
 version = 9.0.5
-modtime = 1694475168.753973000
+modtime = 1694475720.621501000
+
+[app/package/check_for_updates]
+version = 9.0.5
+modtime = 1694475720.622854000
+
+[nav/default]
+version = 9.0.5
+modtime = 1694481050.784327000
+
+[views/forwarder_summaries]
+owner = admin
+version = 9.0.5
+modtime = 1694479935.684507000
+
+[views/forwarder_details]
+owner = admin
+version = 9.0.5
+modtime = 1694480957.152414000
+
+[views/forwarder_details_by_host]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = admin
+version = 9.0.5
+modtime = 1694481402.660523000

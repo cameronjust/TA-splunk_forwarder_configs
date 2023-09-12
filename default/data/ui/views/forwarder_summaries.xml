@@ -1,0 +1,175 @@
+<form version="1.1">
+  <label>Forwarder Summaries</label>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Splunk Instances (across environment)</title>
+        <search>
+          <query>index=_internal | stats dc(host) as hosts</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Forwarders Using a Deployment Server</title>
+        <search>
+          <query>index=_internal "Running phone" | stats dc(host)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <table>
+        <title>Deployment Servers Seen</title>
+        <search>
+          <query>index=_internal sourcetype=splunkd *deploy-server* nTotal=* 
+| head 1 
+| rename nTotal as client_count 
+| table host client_count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+        <h1 style="background-color: #aaa; color: black; padding: 10px; text-align: center;">Statistics Collected from this Addon</h1>
+  
+        <p>If the "Splunk Instances Seen (with config data)" doesn't match the "Splunk Instances (across environment)" above then you might need to manually install this addon to some instances or ensure the deployment server is sending this addon to all forwarders.</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="dropdown" token="token_app">
+        <label>App</label>
+        <choice value="*">All Apps</choice>
+        <default>*</default>
+        <prefix>conf_app_name="</prefix>
+        <suffix>"</suffix>
+        <initialValue>*</initialValue>
+        <fieldForLabel>display_name</fieldForLabel>
+        <fieldForValue>app</fieldForValue>
+        <search>
+          <query>index=main sourcetype="forwarder_config:inputs" conf_file_full=*
+| rex field=_cd "(?&lt;bucket&gt;\d+):(?&lt;address&gt;\d+)" 
+| sort 0 + host _indextime address, stanza, app 
+| search (conf_type!="system" AND setting_var!="host") OR stanza=* 
+| table conf* host stanza setting setting_var setting_value 
+| filldown stanza 
+```This stats will essentially achieve a dedup from the same hosts```
+| stats values(setting) as settings values(conf_app_name) as app by host, stanza 
+``` This search only includes enabled stanzas ```
+| search settings="disabled*=*0" OR settings="disabled*=*false"
+| stats dc(stanza) as count by app
+| sort app
+| eval display_name = app . " (". count . ")"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+      </input>
+      <input type="dropdown" token="token_exclude_splunk_defaults">
+        <label>Exclude Splunk Defaults</label>
+        <choice value="(app!=&quot;splunk_assist&quot; AND app!=&quot;python_upgrade_readiness_app&quot; AND app!=&quot;splunk_instrumentation&quot; AND app!=&quot;splunk_secure_gateway&quot; AND app!=&quot;splunk_app_addon-builder&quot;)">Yes</choice>
+        <choice value="*">No</choice>
+        <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</default>
+        <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</initialValue>
+      </input>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>Splunk Instances Seen (with config data)</title>
+        <search>
+          <query>index=main sourcetype="forwarder_config:inputs" conf_file_full=* stanza=* | stats dc(host) as hosts</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Unique Stanzas</title>
+        <search>
+          <query>index=main sourcetype="forwarder_config:inputs" conf_file_full=* stanza=* $token_app$ | stats dc(stanza) as stanzas</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Unique Enabled Stanzas</title>
+        <search>
+          <query>index=main sourcetype="forwarder_config:inputs" conf_file_full=* $token_app$ 
+| rex field=_cd "(?&lt;bucket&gt;\d+):(?&lt;address&gt;\d+)" 
+| sort 0 + host _indextime address, stanza, app 
+| search (conf_type!="system" AND setting_var!="host") OR stanza=* 
+| table conf* host stanza setting setting_var setting_value 
+| filldown stanza 
+```This stats will essentially achieve a dedup from the same hosts```
+| stats values(setting) as settings values(conf_app_name) as app by host, stanza 
+``` This search only includes enabled stanzas ```
+| search settings="disabled*=*0" OR settings="disabled*=*false"
+``` filter out default Splunk things ```
+| search $token_exclude_splunk_defaults$
+| stats dc(stanza)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="dropdown" token="token_only_enabled">
+        <label>Only Enabled Stanzas</label>
+        <choice value="settings=&quot;disabled*=*0&quot; OR settings=&quot;disabled*=*false&quot;">Yes</choice>
+        <choice value="*">No</choice>
+        <default>settings="disabled*=*0" OR settings="disabled*=*false"</default>
+        <initialValue>settings="disabled*=*0" OR settings="disabled*=*false"</initialValue>
+      </input>
+      <table>
+        <title>Stanza Types</title>
+        <search>
+          <query>index=main sourcetype="forwarder_config:inputs" conf_file_full=* $token_app$ 
+| rex field=_cd "(?&lt;bucket&gt;\d+):(?&lt;address&gt;\d+)" 
+| sort 0 + host _indextime address, stanza, app 
+| search (conf_type!="system" AND setting_var!="host") OR stanza=* 
+| table conf* host stanza setting setting_var setting_value 
+| filldown stanza 
+```This stats will essentially achieve a dedup from the same hosts```
+| stats values(setting) as settings values(conf_app_name) as app by host, stanza 
+``` This search only includes enabled stanzas ```
+| search $token_only_enabled$
+| rex field=stanza "\[(?&lt;stanza_type&gt;[^:\]]*)"
+``` filter out default Splunk things ```
+| search $token_exclude_splunk_defaults$
+| stats dc(stanza) as unique_stanzas dc(host) as host_count, count as counts_over_all_hosts values(app) as apps by stanza_type
+
+| sort - counts_over_all_hosts</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>
