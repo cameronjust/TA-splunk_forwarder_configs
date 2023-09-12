@@ -17,6 +17,8 @@ This addon runs two scripted inputs to collect a inputs btool and a listing of a
 ## IMPORTANT
 This addon must also be on the indexers and/or aggregate HFs as it contains index time operations. If you forget the data will all come in as multiple lines instead of one line per event.
 
+Also don't forget to change the forwarder_config_data_index macro which points to the index you want to send this data to or all your dashboards won't work.
+
 ## Search Examples
 
 ### Basic Config Output

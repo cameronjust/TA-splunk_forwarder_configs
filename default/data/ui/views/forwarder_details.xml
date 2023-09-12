@@ -1,6 +1,22 @@
 <form version="1.1">
   <label>Forwarder Details by Stanza Type</label>
   <fieldset submitButton="false">
+    <input type="multiselect" token="token_host">
+      <label>host</label>
+      <default>*</default>
+      <prefix>host IN (</prefix>
+      <suffix>)</suffix>
+      <initialValue>*</initialValue>
+      <choice value="*">All hosts</choice>
+      <valuePrefix>"</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter>,</delimiter>
+      <fieldForLabel>host</fieldForLabel>
+      <fieldForValue>host</fieldForValue>
+      <search>
+        <query>index=main sourcetype="forwarder_config:inputs" | stats count by host</query>
+      </search>
+    </input>
     <input type="dropdown" token="token_app">
       <label>App</label>
       <choice value="*">All Apps</choice>
@@ -41,13 +57,6 @@
       <choice value="*">No</choice>
       <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</default>
       <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</initialValue>
-    </input>
-    <input type="text" token="token_host">
-      <label>host</label>
-      <default>*</default>
-      <prefix>host="</prefix>
-      <suffix>"</suffix>
-      <initialValue>*</initialValue>
     </input>
   </fieldset>
   <row>
