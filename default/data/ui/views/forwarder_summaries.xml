@@ -29,8 +29,8 @@
       <table>
         <title>Deployment Servers Seen</title>
         <search>
-          <query>index=_internal sourcetype=splunkd *deploy-server* nTotal=* 
-| head 1 
+          <query>index=_internal sourcetype=splunkd *deploy-server* nTotal>0
+| dedup host
 | rename nTotal as client_count 
 | table host client_count</query>
           <earliest>-24h@h</earliest>
