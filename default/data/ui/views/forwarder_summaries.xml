@@ -6,18 +6,19 @@
       <single>
         <title>Splunk Instances (across environment)</title>
         <search>
-          <query>index=_internal | stats dc(host) as hosts</query>
+          <query>| tstats dc(host) as hostcount where index=_internal</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
         <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
       </single>
     </panel>
     <panel>
       <single>
         <title>Forwarders Using a Deployment Server</title>
         <search>
-          <query>index=_internal "Running phone" | stats dc(host)</query>
+          <query>| tstats dc(host) as hostcount where index=_internal AND TERM("Running") AND TERM("phone")</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
@@ -29,7 +30,7 @@
       <table>
         <title>Deployment Servers Seen</title>
         <search>
-          <query>index=_internal sourcetype=splunkd *deploy-server* nTotal>0
+          <query>index=_internal sourcetype=splunkd "deploy-server" nTotal&gt;0
 | dedup host
 | rename nTotal as client_count 
 | table host client_count</query>
@@ -37,6 +38,7 @@
           <latest>now</latest>
         </search>
         <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>
@@ -79,11 +81,11 @@
         </search>
       </input>
       <input type="dropdown" token="token_exclude_splunk_defaults">
-		  <label>Exclude Splunk Defaults</label>
-		  <choice value="(app!=&quot;splunk_assist&quot; AND app!=&quot;python_upgrade_readiness_app&quot; AND app!=&quot;splunk_instrumentation&quot; AND app!=&quot;splunk_secure_gateway&quot; AND app!=&quot;splunk_app_addon-builder&quot; AND app!=&quot;SplunkUniversalForwarder&quot;)">Yes</choice>
-		  <choice value="*">No</choice>
-		  <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder" AND app!="SplunkUniversalForwarder")</default>
-		  <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder" AND app!="SplunkUniversalForwarder")</initialValue>
+        <label>Exclude Splunk Defaults</label>
+        <choice value="(app!=&quot;splunk_assist&quot; AND app!=&quot;python_upgrade_readiness_app&quot; AND app!=&quot;splunk_instrumentation&quot; AND app!=&quot;splunk_secure_gateway&quot; AND app!=&quot;splunk_app_addon-builder&quot;)">Yes</choice>
+        <choice value="*">No</choice>
+        <default>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</default>
+        <initialValue>(app!="splunk_assist" AND app!="python_upgrade_readiness_app" AND app!="splunk_instrumentation" AND app!="splunk_secure_gateway" AND app!="splunk_app_addon-builder")</initialValue>
       </input>
     </panel>
   </row>
