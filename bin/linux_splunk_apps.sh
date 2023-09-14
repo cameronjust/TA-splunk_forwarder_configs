@@ -5,9 +5,12 @@
 
 if [ -d "/opt/splunkforwarder" ]; then
 	SPLUNK_HOME="/opt/splunkforwarder"
+# 	echo $SPLUNK_HOME
 
 elif [ -d "/opt/splunk" ]; then
 	SPLUNK_HOME="/opt/splunk"
+#         echo $SPLUNK_HOME
+	
 	
 else
     echo "WARNING: Splunk directory not detected. ignore=1"
@@ -16,6 +19,10 @@ fi
 
 # Use a for loop to list directory names
 targetDirectory="$SPLUNK_HOME/etc/apps"
+
+# echo $SPLUNK_HOME
+# echo $targetDirectory
+
 for directory in "$targetDirectory"/*; do
     if [ -d "$directory" ]; then
         echo "$(basename "$directory")"
